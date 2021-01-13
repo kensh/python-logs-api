@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  python-logs-api
+
+  Sample SAM Template for python-logs-api
+
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  PythonLogsApiFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: src/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Layers:
+      - !Ref PythonLogsApiLayer
+
+  PythonLogsApiLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      Description: PythonLogsApiLayer description
+      ContentUri: 'layer/'
+      CompatibleRuntimes:
+        - python3.8
+    Metadata:
+      BuildMethod: makefile
+
+Outputs:
+  PythonLogsApiFunction:
+    Description: "PythonLogsApiFunction ARN"
+    Value: !GetAtt PythonLogsApiFunction.Arn
+  PythonLogsApiFunctionIamRole:
+    Description: "Implicit IAM Role created for PythonLogsApiFunction"
+    Value: !GetAtt PythonLogsApiFunctionRole.Arn
